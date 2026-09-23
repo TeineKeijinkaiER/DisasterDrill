@@ -157,11 +157,11 @@ def build_pdf(source_dir: Path, label: str, output_path: Path) -> None:
     c = canvas.Canvas(str(output_path), pagesize=A4, pageCompression=1)
     c.setTitle(f"災害訓練 {label} QRカード")
     c.setAuthor("TeineKeijinkaiER")
-    c.setSubject("A4 名刺用紙 91mm x 55mm / 4面")
+    c.setSubject("A4 名刺用紙 91mm x 55mm / 10面")
 
     page_width, page_height = A4
     for index, image_path in enumerate(files):
-        position = index % 4
+        position = index % 10
         if position == 0 and index:
             c.showPage()
 
@@ -183,12 +183,12 @@ def main() -> None:
     build_pdf(
         ROOT / "Disaster_lab",
         "LAB",
-        OUTPUT_DIR / "Disaster_Lab_QR_cards_A4_4up.pdf",
+        OUTPUT_DIR / "Disaster_Lab_QR_cards_A4_10up.pdf",
     )
     build_pdf(
         ROOT / "Disaster_BGA",
         "BGA",
-        OUTPUT_DIR / "Disaster_BGA_QR_cards_A4_4up.pdf",
+        OUTPUT_DIR / "Disaster_BGA_QR_cards_A4_10up.pdf",
     )
 
 
