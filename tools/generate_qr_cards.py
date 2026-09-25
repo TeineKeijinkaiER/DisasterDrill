@@ -11,6 +11,7 @@ from reportlab.lib.colors import Color, HexColor, black, white
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import mm
 from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.cidfonts import UnicodeCIDFont
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfgen import canvas
 
@@ -27,7 +28,10 @@ CARD_HEIGHT = 55 * mm
 MARGIN_X = 14 * mm
 MARGIN_TOP = 11 * mm
 
-FONT_PATH = Path(r"C:\Windows\Fonts\NotoSansJP-VF.ttf")
+FONT_PATHS = (
+    Path(r"C:\Windows\Fonts\NotoSansJP-VF.ttf"),
+    Path("/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc"),
+)
 FONT_NAME = "NotoSansJP"
 
 BLUE = HexColor("#17689B")
@@ -44,7 +48,7 @@ PATIENTS = {
     13: ("13歳前後", "身元不明（ID未確認）"),
     14: ("31歳", "マツモトレイ"),
     19: ("69歳", "シミズカズミ"),
-    21: ("年齢未登録", "氏名未登録"),
+    21: ("78歳", "アベノア"),
     22: ("50歳", "モリアサヒ"),
     23: ("74歳", "イケダハルカ"),
     24: ("81歳", "ハシモトミドリ"),
@@ -63,9 +67,13 @@ PATIENTS = {
 
 
 def register_fonts() -> None:
-    if not FONT_PATH.exists():
-        raise FileNotFoundError(f"Japanese font not found: {FONT_PATH}")
-    pdfmetrics.registerFont(TTFont(FONT_NAME, str(FONT_PATH)))
+    global FONT_NAME
+    for font_path in FONT_PATHS:
+        if font_path.exists():
+            pdfmetrics.registerFont(TTFont(FONT_NAME, str(font_path)))
+            return
+    FONT_NAME = "HeiseiKakuGo-W5"
+    pdfmetrics.registerFont(UnicodeCIDFont(FONT_NAME))
 
 
 def parse_id(path: Path) -> int:
